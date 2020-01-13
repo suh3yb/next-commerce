@@ -1,18 +1,8 @@
 import axios from 'axios';
+import ProductList from '../components/Index/ProductList';
 
 const Home = ({ products }) => {
-  return (
-    <>
-      {products.map(product => (
-        <div key={product.sku}>
-          <h1>{product.name}</h1>
-          <p>{product.description}</p>
-          <h3>{product.price}</h3>
-          <br />
-        </div>
-      ))}
-    </>
-  );
+  return <ProductList products={products} />;
 };
 
 Home.getInitialProps = async () => {

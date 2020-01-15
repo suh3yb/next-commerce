@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   Form,
@@ -11,6 +11,7 @@ import {
   Icon,
 } from 'semantic-ui-react';
 import baseUrl from '../utils/baseUrl';
+import catchErrors from '../utils/catchErrors';
 
 const INITIAL_PRODUCT = {
   name: '',
@@ -24,6 +25,13 @@ const CreateProduct = () => {
   const [mediaPreview, setMediaPreview] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const isProduct = Object.values(product).every(elem => Boolean(elem));
+    setDisabled(!isProduct);
+  }, [product]);
 
   const handleChange = event => {
     const { name, value, files } = event.target;
@@ -56,11 +64,13 @@ const CreateProduct = () => {
       const payload = { name, price, description, mediaUrl };
       const response = await axios.post(url, payload);
       console.log(response);
-      setLoading(false);
       setProduct(INITIAL_PRODUCT);
       setSuccess(true);
     } catch (error) {
-      console.log(error);
+      catchErrors(error, setError);
+      console.error('ERROR!', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,7 +80,13 @@ const CreateProduct = () => {
         <Icon name="add" color="orange" />
         Create New Product
       </Header>
-      <Form loading={loading} success={success} onSubmit={handleSubmit}>
+      <Form
+        loading={loading}
+        error={Boolean(error)}
+        success={success}
+        onSubmit={handleSubmit}
+      >
+        <Message error header="Oops!" content={error} />
         <Message
           success
           icon="check"
@@ -118,7 +134,7 @@ const CreateProduct = () => {
         />
         <Form.Field
           control={Button}
-          disabled={loading}
+          disabled={disabled || loading}
           color="blue"
           icon="pencil alternate"
           content="Submit"

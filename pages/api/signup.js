@@ -4,6 +4,7 @@ import isEmail from 'validator/lib/isEmail';
 import isLength from 'validator/lib/isLength';
 import connectDB from '../../utils/connectDb';
 import User from '../../models/User';
+import Cart from '../../models/Cart';
 
 connectDB();
 
@@ -30,6 +31,8 @@ export default async (req, res) => {
       email,
       password: hash,
     }).save();
+
+    await new Cart({ user: newUser._id }).save();
 
     const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: '7d',

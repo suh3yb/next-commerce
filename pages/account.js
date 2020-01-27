@@ -6,7 +6,6 @@ import AccountPermissions from '../components/Account/AccountPermissions';
 import baseUrl from '../utils/baseUrl';
 
 const Account = ({ user, orders }) => {
-  console.log(orders);
   return (
     <>
       <AccountHeader {...user} />

@@ -1,10 +1,10 @@
 import Product from '../../models/Product';
 import connectDB from '../../utils/connectDb';
 
-connectDB();
-
 export default async (req, res) => {
   try {
+    await connectDB();
+
     const { page, size } = req.query;
     const pageNum = Number(page);
     const pageSize = Number(size);

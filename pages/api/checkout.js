@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import uuidv4 from 'uuid/v4';
 import jwt from 'jsonwebtoken';
+import connectDB from '../../utils/connectDb';
 import Cart from '../../models/Cart';
 import Order from '../../models/Order';
 import calculateCartTotal from '../../utils/calculateCartTotal';
@@ -10,6 +11,8 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 export default async (req, res) => {
   const { paymentData } = req.body;
   try {
+    await connectDB();
+
     const { userId } = jwt.verify(
       req.headers.authorization,
       process.env.JWT_SECRET,

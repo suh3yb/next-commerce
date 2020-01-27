@@ -2,10 +2,10 @@ import jwt from 'jsonwebtoken';
 import connectDB from '../../utils/connectDb';
 import Order from '../../models/Order';
 
-connectDB();
-
 export default async (req, res) => {
   try {
+    await connectDB();
+
     const { userId } = jwt.verify(
       req.headers.authorization,
       process.env.JWT_SECRET,

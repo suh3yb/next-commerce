@@ -6,11 +6,11 @@ import connectDB from '../../utils/connectDb';
 import User from '../../models/User';
 import Cart from '../../models/Cart';
 
-connectDB();
-
 export default async (req, res) => {
   const { name, email, password } = req.body;
   try {
+    await connectDB();
+
     if (!isLength(name, { min: 3, max: 10 })) {
       return res.status(422).send('Name must be 3-10 characters long');
     } else if (!isLength(password, { min: 6 })) {

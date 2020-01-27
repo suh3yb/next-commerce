@@ -3,10 +3,10 @@ import jwt from 'jsonwebtoken';
 import connectDB from '../../utils/connectDb';
 import User from '../../models/User';
 
-connectDB();
-
 export default async (req, res) => {
   try {
+    await connectDB();
+
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select('+password');
 

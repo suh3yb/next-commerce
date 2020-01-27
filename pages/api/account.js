@@ -2,19 +2,24 @@ import jwt from 'jsonwebtoken';
 import connectDB from '../../utils/connectDb';
 import User from '../../models/User';
 
-connectDB();
-
 export default async (req, res) => {
-  switch (req.method) {
-    case 'GET':
-      await handleGetRequest(req, res);
-      break;
-    case 'PUT':
-      await handlePutRequest(req, res);
-      break;
-    default:
-      res.status(405).send(`Method ${req.method} not allowed`);
-      break;
+  try {
+    await connectDB();
+
+    switch (req.method) {
+      case 'GET':
+        await handleGetRequest(req, res);
+        break;
+      case 'PUT':
+        await handlePutRequest(req, res);
+        break;
+      default:
+        res.status(405).send(`Method ${req.method} not allowed`);
+        break;
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error connecting to server');
   }
 };
 

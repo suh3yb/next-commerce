@@ -2,22 +2,27 @@ import Product from '../../models/Product';
 import Cart from '../../models/Cart';
 import connectDB from '../../utils/connectDb';
 
-connectDB();
-
 export default async (req, res) => {
-  switch (req.method) {
-    case 'GET':
-      await handleGetRequest(req, res);
-      break;
-    case 'POST':
-      await handlePostRequest(req, res);
-      break;
-    case 'DELETE':
-      await handleDeleteRequest(req, res);
-      break;
-    default:
-      res.status(405).send(`Method ${req.method} not allowed`);
-      break;
+  try {
+    await connectDB();
+
+    switch (req.method) {
+      case 'GET':
+        await handleGetRequest(req, res);
+        break;
+      case 'POST':
+        await handlePostRequest(req, res);
+        break;
+      case 'DELETE':
+        await handleDeleteRequest(req, res);
+        break;
+      default:
+        res.status(405).send(`Method ${req.method} not allowed`);
+        break;
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error connecting to server');
   }
 };
 

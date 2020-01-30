@@ -31,7 +31,7 @@ export default async (req, res) => {
 
 const handleGetRequest = async (req, res) => {
   if (!('authorization' in req.headers)) {
-    res.status(401).send('No authorization token');
+    return res.status(401).send('No authorization token');
   }
   try {
     const { userId } = jwt.verify(
@@ -52,7 +52,7 @@ const handleGetRequest = async (req, res) => {
 const handlePutRequest = async (req, res) => {
   const { quantity, productId } = req.body;
   if (!('authorization' in req.headers)) {
-    res.status(401).send('No authorization token');
+    return res.status(401).send('No authorization token');
   }
   try {
     const { userId } = jwt.verify(
@@ -85,7 +85,7 @@ const handlePutRequest = async (req, res) => {
 const handleDeleteRequest = async (req, res) => {
   const { productId } = req.query;
   if (!('authorization' in req.headers)) {
-    res.status(401).send('No authorization token');
+    return res.status(401).send('No authorization token');
   }
   try {
     const { userId } = jwt.verify(

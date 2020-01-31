@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import Cart from '../../models/Cart';
+import Product from '../../models/Product';
 import connectDB from '../../utils/connectDb';
 
 const { ObjectId } = mongoose.Types;
@@ -40,7 +41,7 @@ const handleGetRequest = async (req, res) => {
     );
     const cart = await Cart.findOne({ user: userId }).populate({
       path: 'products.product',
-      model: 'Product',
+      model: Product,
     });
     res.status(200).json(cart.products);
   } catch (error) {
@@ -100,7 +101,7 @@ const handleDeleteRequest = async (req, res) => {
       { new: true },
     ).populate({
       path: 'products.product',
-      model: 'Product',
+      model: Product,
     });
     res.status(200).json(cart.products);
   } catch (error) {

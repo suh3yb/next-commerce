@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import connectDB from '../../utils/connectDb';
 import Cart from '../../models/Cart';
 import Order from '../../models/Order';
+import Product from '../../models/Product';
 import calculateCartTotal from '../../utils/calculateCartTotal';
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -19,7 +20,7 @@ export default async (req, res) => {
     );
     const cart = await Cart.findOne({ user: userId }).populate({
       path: 'products.product',
-      model: 'Product',
+      model: Product,
     });
     const { cartTotal, stripeTotal } = calculateCartTotal(cart.products);
     const prevCustomer = await stripe.customers.list({

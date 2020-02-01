@@ -10,7 +10,7 @@ const Account = ({ user, orders }) => {
   return (
     <>
       <AccountHeader {...user} />
-      <AccountSettings {...user} />
+      <AccountSettings />
       <AccountOrders orders={orders} />
       {user.role === 'root' && <AccountPermissions />}
     </>

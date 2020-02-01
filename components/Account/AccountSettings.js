@@ -14,7 +14,7 @@ import baseUrl from '../../utils/baseUrl';
 
 const INITIAL_FORM = { currentPassword: '', newPassword: '', newPassword2: '' };
 
-const AccountSettings = ({ _id }) => {
+const AccountSettings = () => {
   const [form, setForm] = useState(INITIAL_FORM);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);

@@ -46,6 +46,14 @@ const handleGetRequest = async (req, res) => {
 };
 
 const handlePutRequest = async (req, res) => {
+  if (!('authorization' in req.headers)) {
+    return res.status(401).send('No authorization token');
+  }
+  const { userId } = jwt.verify(
+    req.headers.authorization,
+    process.env.JWT_SECRET,
+  );
+
   const { _id, role, passwords } = req.body;
 
   try {
@@ -54,7 +62,7 @@ const handlePutRequest = async (req, res) => {
       res.status(203).send('User updated');
     } else if (passwords) {
       const { currentPassword, newPassword } = passwords;
-      const user = await User.findOne({ _id }).select('+password');
+      const user = await User.findOne({ _id: userId }).select('+password');
       const isMatch = await bcrypt.compare(currentPassword, user.password);
       if (!isMatch) {
         return res.status(401).send('Check the current password');

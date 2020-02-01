@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import cookie from 'js-cookie';
 import {
   Header,
   Accordion,
@@ -52,15 +53,16 @@ const AccountSettings = ({ _id }) => {
       if (!passwordsMatch) {
         return setError('Passwords do not match');
       }
+      const token = cookie.get('token');
       const url = `${baseUrl}/api/account`;
+      const headers = { headers: { Authorization: token } };
       const payload = {
-        _id,
         passwords: {
           currentPassword: form.currentPassword,
           newPassword: form.newPassword,
         },
       };
-      const response = await axios.put(url, payload);
+      const response = await axios.put(url, payload, headers);
       setSuccess(response.data);
     } catch (error) {
       catchErrors(error, setError);

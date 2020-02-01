@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import connectDB from '../../utils/connectDb';
 import User from '../../models/User';
 
@@ -45,7 +46,32 @@ const handleGetRequest = async (req, res) => {
 };
 
 const handlePutRequest = async (req, res) => {
-  const { _id, role } = req.body;
-  await User.findByIdAndUpdate({ _id }, { role });
-  res.status(203).send('User updated');
+  const { _id, role, passwords } = req.body;
+
+  try {
+    if (role) {
+      await User.findByIdAndUpdate({ _id }, { role });
+      res.status(203).send('User updated');
+    } else if (passwords) {
+      const { currentPassword, newPassword } = passwords;
+      const user = await User.findOne({ _id }).select('+password');
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(401).send('Check the current password');
+      }
+      if (currentPassword === newPassword) {
+        return res
+          .status(400)
+          .send('New password must be different than current password');
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+      await user.save();
+
+      res.status(203).send('Password updated');
+    }
+  } catch (error) {
+    res.status(403).send('Invalid token');
+  }
 };
